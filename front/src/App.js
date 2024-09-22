@@ -7,6 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
        <h1>Aluma Project</h1>
+       <h2>learn git</h2>
       </header>
     </div>
   );
