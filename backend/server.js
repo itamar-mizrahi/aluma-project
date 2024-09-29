@@ -1,15 +1,26 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 // Create Express app
 const app = express();
+// Middleware for JSON POST requests
+app.use(express.json());
+const UserSchema = new mongoose.Schema({
+  username: String,
+  password: String
+});
+
+const User = mongoose.model('User', UserSchema);
+
 
 // Enable CORS
 app.use(cors());
-
+const dotenv = require('dotenv');
+dotenv.config();
+console.log(process.env.MONGO_URI);
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://theitamarmizrahi@gmail.com:123456@tasks.m5i0bys.mongodb.net/', {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -23,7 +34,21 @@ mongoose.connect('mongodb+srv://theitamarmizrahi@gmail.com:123456@tasks.m5i0bys.
 // Define your API routes here
 // Create a new record
 app.post('/api/records', (req, res) => {
-  // Logic to create a new record
+  const { username, password } = req.body;
+
+  // Logic to save the username and password to MongoDB
+  // Assuming you have a User model defined using Mongoose
+  const User = mongoose.model('User');
+  const newUser = new User({ username, password: bcrypt.hashSync(password, 10) });
+  // const newUser = new User({ username, password });
+
+  newUser.save()
+    .then(() => {
+      res.status(201).json({ message: 'User created successfully' });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'Failed to create user' });
+    });
 });
 
 // Read all records
