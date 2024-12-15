@@ -71,7 +71,6 @@ app.delete('/api/records/:id', (req, res) => {
   // Logic to delete a record by ID
 });
 
-
 // Start the server
 const port = 3000;
 app.listen(port, () => {
